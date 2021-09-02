@@ -1,33 +1,32 @@
 export const BASE_URL = 'https://hacker-news.firebaseio.com/v0/';
 
-export const getPosts = async () => {
+export const getPostsId = async () => {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
   return await fetch(`${BASE_URL}topstories.json`, {
-    method: 'GET',
-    headers: headers,
-  })
-    .then((response) => {
-      return response.json();
+      method: 'GET',
+      headers: headers,
     })
-    .then((res) => {
-      return res.map(id =>
-        fetch(`${BASE_URL}item/${id}.json`, {
-          method: 'GET',
-          headers: headers,
-        })
-        .then((data) => data.json())
-      )
-    })
-    .then((res) => {
-      return Promise.all(res)
-      .then((data) => {
-        data.sort((a, b) => a.score < b.score ? 1 : -1);
-        console.log(data);
-        return data;
-      });
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
-    })
+      .then((response) => {
+        return response.json();
+      })
+      .catch((error) => {
+        throw error;
+      })
 };
+
+export const getPosts = (data) => {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  const promises = data.slice(0,1).map((id) =>
+    fetch(`${BASE_URL}item/${id}.json?print=pretty`, {
+      method: 'GET',
+      headers: headers,
+    })
+    .then(res => res.json())
+    .catch((error) => {
+      throw error;
+    }));
+  return Promise.all(promises);
+};
+

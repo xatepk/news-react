@@ -1,4 +1,4 @@
-import { ADD_POST } from "./constants"
+import { ADD_POST, UPDATE_LOADING_STATE } from "./constants"
 
 const initialState = {
   posts: [],
@@ -12,6 +12,12 @@ export const postsReducer = (state = initialState, action) => {
         ...state,
         posts: action.payload,
         dataFetching: false,
+      }
+    }
+    case UPDATE_LOADING_STATE: {
+      return {
+        ...state,
+        dataFetching: action.payload,
       }
     }
 

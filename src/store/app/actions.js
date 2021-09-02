@@ -1,6 +1,11 @@
-import { ADD_POST } from "./constants";
+import { ADD_POST, UPDATE_LOADING_STATE } from "./constants";
 
-export const addPost = (post) => ({
+export const addPost = (payload) => ({
   type: ADD_POST,
-  payload: post
+  payload,
 });
+
+export const updateLoadingState = (payload) => ({
+  type: UPDATE_LOADING_STATE,
+  payload,
+})
