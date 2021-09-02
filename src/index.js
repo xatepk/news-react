@@ -5,6 +5,7 @@ import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom'
 import thunk from 'redux-thunk';
 import { rootReducer } from './store/rootReducer';
 
@@ -16,7 +17,11 @@ const store = createStore(rootReducer, compose(
 ));
 const app = (
   <Provider store={store}>
-    <App />
+    <React.StrictMode>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <App />
+      </BrowserRouter>
+  </React.StrictMode>
   </Provider>
 )
 

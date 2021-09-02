@@ -1,8 +1,10 @@
 import './App.css';
 import Posts from '../Posts/Posts';
+import Post from '../Post/Post'
 import { useEffect } from 'react';
 import { getPosts, getPostsId } from '../../utils/PostsApi';
 import { useDispatch } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { addPost, updateLoadingState } from '../../store/app/actions';
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
         .then((res) => {
           getPosts(res)
           .then((res) => {
+            console.log(res);
+
             res.sort((a, b) => a.score < b.score ? 1 : -1);
             dispatch(addPost(res));
           })
@@ -29,8 +33,11 @@ function App() {
   })
 
   return (
-    <div className="App">
-      <Posts />
+    <div className="page">
+      <Switch>
+        <Route exact path="/posts" component={Posts} />
+        <Route path="/posts/:id" component={Post} />
+      </Switch>
     </div>
   );
 }
