@@ -22,6 +22,8 @@ export const getPosts = async () => {
     .then((res) => {
       return Promise.all(res)
       .then((data) => {
+        data.sort((a, b) => a.score < b.score ? 1 : -1);
+        console.log(data);
         return data;
       });
     })

@@ -1,15 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Post from '../Post/Post'
+import Post from '../Post/Post';
+import Preloader from '../Preloader/Preloader'
 
 const Posts = ({ posts, dataFetching }) => {
   if (dataFetching) {
-      return <p>loading...</p>;
+      return <Preloader />;
   }
-  if (!posts.length) {
-    return <p className="posts__status">Новостей пока нет</p>
-  }
-  return posts.map(post => <Post />)
+  
+  return (
+    <section className="posts__block">
+      {!posts.length && <p className="movies__message">Новостей пока нет</p>}
+      <ul className="posts__list">
+        {posts
+          .map((post, idx) => {
+            if (idx < 100) {
+              return (
+                <Post
+                  key={post.id}
+                />
+              );
+            }
+            return null;
+        })}
+      </ul>
+    </section>
+  );
 }
 
 const mapStateToProps = ({ rootState }) => {
