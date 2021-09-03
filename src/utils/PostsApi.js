@@ -18,7 +18,7 @@ export const getPostsId = async () => {
 export const getPosts = (data) => {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
-  const promises = data.slice(0,1).map((id) =>
+  const promises = data.slice(0,8).map((id) =>
     fetch(`${BASE_URL}item/${id}.json?print=pretty`, {
       method: 'GET',
       headers: headers,

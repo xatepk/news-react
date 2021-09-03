@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import './Posts.css';
 import Post from '../Post/Post';
 import Preloader from '../Preloader/Preloader'
 
