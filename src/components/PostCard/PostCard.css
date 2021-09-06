@@ -1,0 +1,66 @@
+.card {
+  position: relative;
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  padding: 20px 15px;
+  border-bottom: 3px solid #151515;
+}
+
+.card__autor {
+  font-family: 'Roboto Slab', Arial, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 125%;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #3b5f70;
+}
+
+.card__date {
+  font-family: 'Source Sans Pro', Arial, 'Segoe UI', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 133%;
+  color: grey;
+  margin: 0 0 0 20px;
+}
+
+.card__description {
+  padding: 20px 15px 5px;
+}
+
+.card__title {
+  margin: 0 0 5px;
+}
+
+.card__link {
+  text-decoration: none;
+  color: grey;
+  font-size: 12px;
+}
+
+.card__link:hover {
+  transform: scale(1.1);
+}
+
+.card__comments {
+  display: flex;
+  align-items: center;
+  padding: 0px 15px;
+}
+
+.card__comments-icon {
+  width: 18px;
+  height: 18px;
+  background: url('../../images/comment.svg') no-repeat center;
+  background-size: 18px 18px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 0;
+  margin-right: 5px;
+}

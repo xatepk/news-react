@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="page">
       <Switch>
-        <Route exact path="/posts" component={Posts} />
+        <Route exact path="/" component={Posts} />
         <Route path="/posts/:id" component={PostCard} />
       </Switch>
     </div>
