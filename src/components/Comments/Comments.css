@@ -1,0 +1,29 @@
+.comments__list {
+  padding: 0px 15px;
+  margin: 0;
+}
+
+.comments__root-comment {
+  padding: 0px;
+}
+
+.comments__item {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+.comment__more {
+  margin-right: 5px;
+  display: none;
+}
+
+.comment__more:hover {
+  cursor: pointer;
+  opacity: .6;
+  transition: opacity .5s ease-out;
+}
+
+.comment__more_visible {
+  display: inline;
+}

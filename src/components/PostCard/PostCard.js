@@ -4,21 +4,19 @@ import { connect, useDispatch } from 'react-redux';
 import { getData } from '../../utils/PostsApi';
 import { addComment } from '../../store/app/actions';
 import { Link } from 'react-router-dom';
-import Comments from '../Comments/Comments'
+import Comments from '../Comments/Comments';
+import { SvgIcon } from '../../components/SvgIcon/SvgIcon';
 
-const PostCard = ({ posts, match, comments }) => {
+const PostCard = ({ posts, match, comments, handleGoBack }) => {
   const id = Number(match.params.id);
   const postToShow = posts.find((item) => item.id === id);
+
   const dispatch = useDispatch();
-  console.log('---', comments);
 
   useEffect(() => {
     if (postToShow.kids) {
-      console.log(postToShow);
-
       getData(postToShow.kids)
       .then((res) => {
-        dispatch(addComment(res));
         const allKids = res.flatMap(comment => comment.kids || []);
         getData(allKids)
         .then((result) => {
@@ -42,6 +40,7 @@ const PostCard = ({ posts, match, comments }) => {
 
   return (
     <section className="card">
+      <Link className="back__link" onClick={handleGoBack}>Назад</Link>
       <div className="card__header">
         <span className="card__autor">{postToShow.by}</span>
         <span className="card__date">{`${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()}`}</span>
@@ -51,10 +50,10 @@ const PostCard = ({ posts, match, comments }) => {
         <Link to={postToShow.url} className="card__link">Узнать больше...</Link>
       </div>
       <div className="card__comments">
-        <span className="card__comments-icon"></span>
+        <SvgIcon />
         <span className="card__comments-number">({comments.length})</span>
       </div>
-      {postToShow.kids && <Comments {...postToShow} />}
+      {comments.length ? <Comments { ...{ ...postToShow, comments }} /> : null}
 
     </section>
 

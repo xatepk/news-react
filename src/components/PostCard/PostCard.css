@@ -64,3 +64,17 @@
   padding: 0;
   margin-right: 5px;
 }
+
+.card__comments-number {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.back__link {
+  color: #3b5f70;
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.21;
+  text-decoration: none;
+  padding-left: 15px;
+}
