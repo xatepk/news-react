@@ -9,8 +9,16 @@
 
 .comments__item {
   list-style-type: none;
+}
+
+.comments__description {
   display: flex;
   align-items: center;
+}
+
+.comment__text {
+  margin: 5px 0;
+  font-size: 12px;
 }
 
 .comment__more {
@@ -26,4 +34,8 @@
 
 .comment__more_visible {
   display: inline;
+}
+
+.comments__child-list {
+  padding-left: 30px;
 }

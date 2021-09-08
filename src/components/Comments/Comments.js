@@ -10,35 +10,62 @@ const htmlDecode = (string) => {
 
 export default ({ kids, comments }) => {
 
-  const [isCommentOpen, toggleComment] = useState(false);
+  const [expandedComments, toggleComment] = useState([]);
 
-  function handleClick() {
-    toggleComment(!isCommentOpen);
+  function handleClick(id) {
+    const idx = expandedComments.indexOf(id);
+    let nextComments = [...expandedComments];
+    if (idx > -1) {
+      nextComments.splice(idx, 1);
+    } else {
+      nextComments = [...nextComments, id];
+    }
+    toggleComment(nextComments);
   }
+  console.log('commentsIds', expandedComments);
+
   return (
     <ul className="comments__list">
         {kids.map((rootCommentId) => {
           const rootComment = comments.find(comment => comment.id === rootCommentId);
+          rootComment.isCommentOpen = expandedComments.includes(rootCommentId);
+
           const commentChild = comments.filter(comment => comment.parent === rootCommentId);
-          console.log(commentChild);
-
-
           return (
             <ul key={rootCommentId} className="comments__root-comment">
               <li className="comments__item">
-                { commentChild.length ? <span className={cn("comment__more", { "comment__more_visible" : !isCommentOpen })} onClick={handleClick}> <SvgIcon icon='plus-circle' /></span> : null}
-                <span className={cn("comment__more", { "comment__more_visible" : isCommentOpen })} onClick={handleClick}><SvgIcon icon='minus-circle' /></span>
-                <p>{htmlDecode(rootComment.text)}</p>
-                { isCommentOpen &&
-                  <ul className="comments__list">
+                <div className="comments__description">
+                  { commentChild.length ? (
+                    <span
+                      className={
+                        cn("comment__more", { "comment__more_visible" : !rootComment.isCommentOpen})
+                      }
+                      onClick={() => handleClick(rootCommentId)}
+                    >
+                      <SvgIcon icon='plus-circle' />
+                    </span>
+                  ) : null}
+                  <span
+                    className={
+                      cn("comment__more", { "comment__more_visible" : rootComment.isCommentOpen })
+                    }
+                    onClick={() => handleClick(rootCommentId)}
+                  >
+                    <SvgIcon icon='minus-circle' />
+                  </span>
+                  <p className="comment__text">{htmlDecode(rootComment.text)}</p>
+                </div>
+
+                { rootComment.isCommentOpen ?
+                  <ul className="comments__list comments__child-list">
                   {commentChild.map((comment) => {
                       return (
-                        <li className="comments__item">
-                          <p>{htmlDecode(comment.text)}</p>
+                        <li key={comment.id} className="comments__item">
+                          <p className="comment__text">{htmlDecode(comment.text)}</p>
                         </li>
                       );
                   })}
-                </ul>}
+                </ul> : null}
               </li>
             </ul>
           );
