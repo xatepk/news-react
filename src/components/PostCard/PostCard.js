@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './PostCard.css'
 import { connect, useDispatch } from 'react-redux';
 import { getData } from '../../utils/PostsApi';
@@ -11,36 +11,43 @@ import Preloader from '../Preloader/Preloader';
 const PostCard = ({ posts, match, comments, handleGoBack, interval }) => {
   const dispatch = useDispatch();
   const { id } = match.params;
+  const intervalRef = useRef(null);
 
   let postToShow = posts.find((item) => item.id === parseInt(id));
-  console.log(postToShow);
-
-
-  useEffect(() => {
-    if (postToShow) {
-
-      if (interval) {
-        clearInterval(interval);
-      }
-
-      if (postToShow.kids) {
-        getData(postToShow.kids)
-        .then((res) => {
-          const allKids = res.flatMap(comment => comment.kids || []);
-          getData(allKids)
-          .then((result) => {
-            dispatch(addComment([...res, ...result]));
-          })
-          .catch(err => {
-            console.warn(err);
-          })
+  const updateComments = () => {
+    getData(postToShow.kids)
+      .then((res) => {
+        const allKids = res.flatMap(comment => comment.kids || []);
+        getData(allKids)
+        .then((result) => {
+          dispatch(addComment([...res, ...result]));
         })
         .catch(err => {
           console.warn(err);
-        });
+        })
+      })
+      .catch(err => {
+        console.warn(err);
+      });
+  };
+
+  useEffect(() => {
+    if (postToShow) {
+      if (interval) {
+        clearInterval(interval);
+      }
+      if (postToShow.kids) {
+        updateComments();
+        intervalRef.current = setInterval(updateComments, 5000);
       }
     }
-  }, [postToShow, interval]);
+
+    return () => {
+      dispatch(addComment([]));
+      return clearInterval(intervalRef.current);
+    }
+
+  }, [postToShow]);
 
   if (!postToShow || !comments) {
     return <Preloader />
@@ -60,7 +67,7 @@ const PostCard = ({ posts, match, comments, handleGoBack, interval }) => {
       </div>
       <div className="card__description">
         <h3 className="card__title">{postToShow.title}</h3>
-        <Link to={postToShow.url} className="card__link">Узнать больше...</Link>
+        <a href={postToShow.url} className="card__link" target='_blank'>Узнать больше...</a>
       </div>
       <div className="card__comments">
         <SvgIcon />

@@ -1,7 +1,7 @@
 import './App.css';
 import '../../index.css';
 import Posts from '../Posts/Posts';
-import { useLayoutEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { getPostsId, getData } from '../../utils/PostsApi';
 import { useDispatch } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -15,7 +15,7 @@ function App() {
   const [ref, setRef] = useState(null);
 
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     getPosts();
     setRef(setInterval(getPosts, 60000));
 
