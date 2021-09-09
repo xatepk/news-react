@@ -38,7 +38,7 @@ const PostCard = ({ posts, match, comments, handleGoBack, interval }) => {
       }
       if (postToShow.kids) {
         updateComments();
-        intervalRef.current = setInterval(updateComments, 5000);
+        intervalRef.current = setInterval(updateComments, 60000);
       }
     }
 
