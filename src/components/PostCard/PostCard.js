@@ -6,32 +6,45 @@ import { addComment } from '../../store/app/actions';
 import { Link } from 'react-router-dom';
 import Comments from '../Comments/Comments';
 import { SvgIcon } from '../../components/SvgIcon/SvgIcon';
+import Preloader from '../Preloader/Preloader';
 
-const PostCard = ({ posts, match, comments, handleGoBack }) => {
-  const id = Number(match.params.id);
-  const postToShow = posts.find((item) => item.id === id);
-
+const PostCard = ({ posts, match, comments, handleGoBack, interval }) => {
   const dispatch = useDispatch();
+  const { id } = match.params;
+
+  let postToShow = posts.find((item) => item.id === parseInt(id));
+  console.log(postToShow);
+
 
   useEffect(() => {
-    if (postToShow.kids) {
-      getData(postToShow.kids)
-      .then((res) => {
-        const allKids = res.flatMap(comment => comment.kids || []);
-        getData(allKids)
-        .then((result) => {
-          dispatch(addComment([...res, ...result]));
+    if (postToShow) {
+
+      if (interval) {
+        clearInterval(interval);
+      }
+
+      if (postToShow.kids) {
+        getData(postToShow.kids)
+        .then((res) => {
+          const allKids = res.flatMap(comment => comment.kids || []);
+          getData(allKids)
+          .then((result) => {
+            dispatch(addComment([...res, ...result]));
+          })
+          .catch(err => {
+            console.warn(err);
+          })
         })
         .catch(err => {
-          console.log(err);
-        })
-      })
-      .catch(err => {
-        console.log(err);
-      })
+          console.warn(err);
+        });
+      }
     }
-  }, []);
+  }, [postToShow, interval]);
 
+  if (!postToShow || !comments) {
+    return <Preloader />
+  }
   const date = new Date( postToShow.time * 1000 );
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -40,7 +53,7 @@ const PostCard = ({ posts, match, comments, handleGoBack }) => {
 
   return (
     <section className="card">
-      <Link className="back__link" onClick={handleGoBack}>Назад</Link>
+      <button className="card__link" onClick={handleGoBack}>Назад</button>
       <div className="card__header">
         <span className="card__autor">{postToShow.by}</span>
         <span className="card__date">{`${monthNames[date.getMonth()]} ${date.getDate()} ${date.getFullYear()}`}</span>

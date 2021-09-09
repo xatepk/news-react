@@ -7,9 +7,10 @@ const initialState = {
 export const commentsReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_COMMENT: {
+      const comments = action.payload.filter(el => el.text || !el.deleted);
       return {
         ...state,
-        comments: action.payload,
+        comments,
       }
     }
   default: return state

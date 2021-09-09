@@ -8,7 +8,7 @@ const htmlDecode = (string) => {
   return doc.documentElement.textContent;
 }
 
-export default ({ kids, comments }) => {
+const Comments = ({ kids = [], comments }) => {
 
   const [expandedComments, toggleComment] = useState([]);
 
@@ -22,12 +22,16 @@ export default ({ kids, comments }) => {
     }
     toggleComment(nextComments);
   }
-  console.log('commentsIds', expandedComments);
 
   return (
     <ul className="comments__list">
         {kids.map((rootCommentId) => {
+
           const rootComment = comments.find(comment => comment.id === rootCommentId);
+          if (!rootComment) {
+            return null;
+          }
+          
           rootComment.isCommentOpen = expandedComments.includes(rootCommentId);
 
           const commentChild = comments.filter(comment => comment.parent === rootCommentId);
@@ -69,18 +73,9 @@ export default ({ kids, comments }) => {
               </li>
             </ul>
           );
-          return null;
         })}
       </ul>
   );
 }
 
-// const mapStateToProps = ({ comments }) => {
-//   console.log(comments);
-//   return {
-//     comments: comments.comments
-//   }
-// }
-
-// export default connect(mapStateToProps, null)(Comments)
-
+export default Comments;

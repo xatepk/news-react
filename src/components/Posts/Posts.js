@@ -18,7 +18,7 @@ const Posts = ({ posts, dataFetching, handleRefreshClick }) => {
     <section className="posts__block">
       {!posts.length && <p className="movies__message">Новостей пока нет</p>}
       <span className="posts__refresh" onClick={onRefreshClick}>
-        <SvgIcon icon='refresh' color="#3b5f70" />
+        <SvgIcon icon='refresh' color="#3b5f70" cursor='pointer' />
       </span>
       <ul className="posts__list">
         {posts.map((post, idx) => {

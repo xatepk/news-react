@@ -1,7 +1,7 @@
 import './App.css';
 import '../../index.css';
 import Posts from '../Posts/Posts';
-import { useEffect, useRef, useCallback } from 'react';
+import { useLayoutEffect, useRef, useCallback, useState } from 'react';
 import { getPostsId, getData } from '../../utils/PostsApi';
 import { useDispatch } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -12,14 +12,17 @@ import PostCard from '../PostCard/PostCard';
 function App() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const intervalRef = useRef();
+  const [ref, setRef] = useState(null);
 
-  useEffect(() => {
-    history.push('./');
-    intervalRef.current = setInterval(getPosts, 5000);
+
+  useLayoutEffect(() => {
+    getPosts();
+    setRef(setInterval(getPosts, 60000));
 
     return () => {
-      clearInterval(intervalRef.current);
+      if (ref) {
+        clearInterval(ref);
+      }
     };
 
   }, []);
@@ -34,7 +37,6 @@ function App() {
         })
         .catch(err => {
           dispatch(updateLoadingState(false));
-          console.log('---', err);
         })
       })
     .catch(err => {
@@ -44,25 +46,35 @@ function App() {
   }
 
   const handleRefreshClick = useCallback(() => {
-    clearInterval(intervalRef.current);
-    const interval = setInterval(getPosts, 5000);
-    intervalRef.current = interval;
-  }, [intervalRef]);
+    clearInterval(ref);
+    getPosts();
+    setRef(setInterval(getPosts, 60000));
+  }, [ref]);
 
   const handleGoBack = () => {
     history.goBack();
+
+    setRef(setInterval(getPosts, 60000));
   }
 
   return (
     <div className="page">
       <Switch>
         <Route exact path="/"
-          component={(routeProps) => <Posts {...{...routeProps, handleRefreshClick}} />}
+          render={(routeProps) => <Posts {...{...routeProps, handleRefreshClick}} />}
         />
         <Route
-          path="/posts/:id"
-          component={PostCard}
-          handleGoBack={handleGoBack} />
+          path="/:id"
+          render={(routeProps) => (
+            <PostCard
+              {...{
+                ...routeProps,
+                handleGoBack,
+                interval: ref,
+              }}
+            />
+          )}
+        />
       </Switch>
     </div>
   );
